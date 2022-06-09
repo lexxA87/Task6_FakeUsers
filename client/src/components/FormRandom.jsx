@@ -1,66 +1,77 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 function FormRandom() {
+  const [selectedCountry, setSelectedCountry] = useState(1);
+  const [rangeMistake, setRangeMistake] = useState(0);
+  const [seed, setSeed] = useState(0);
   const { register, handleSubmit } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmitSeed = (data) => (data.seed ? setSeed(data.seed) : setSeed(0));
 
   return (
     <div className="container-fluid bg-dark">
-      <form
-        className="d-flex row align-items-center"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <select className="col-lg col-6 m-3" {...register("country")}>
-          <option value="The United States">The United States</option>
-          <option value="Russia">Russia</option>
-          <option value="Georgia">Georgia</option>
-        </select>
+      <div className="d-flex row align-items-center">
+        <div className="col-lg col-6 m-2 row">
+          <select
+            className="col-lg p-2"
+            value={selectedCountry}
+            onChange={(e) => setSelectedCountry(e.target.value)}
+          >
+            <option value={1}>The United States</option>
+            <option value={2}>Russia</option>
+            <option value={3}>Georgia</option>
+          </select>
+        </div>
 
         <div className="col-lg col-6 m-2 text-center">
           <label htmlFor="customRange" className="form-label-sm text-white">
             Mistake from 0 to 10
           </label>
           <input
+            value={rangeMistake}
+            onChange={(e) => setRangeMistake(e.target.value)}
             type="range"
             className="form-range"
             id="customRange"
             step="0.25"
             min="0"
             max="10"
-            {...register("mistakes0_10", { min: 0, max: 10 })}
           />
         </div>
 
-        <div className="col-lg col-6 form-floating m-2">
+        <div className="col-lg col-6 form-floating  m-2">
           <input
+            value={rangeMistake}
+            onChange={(e) => setRangeMistake(e.target.value)}
             className="form-control"
             id="floatingInputMistakes0_1000"
             type="number"
-            {...register("mistakes0_1000", { min: 0, max: 1000 })}
           />
           <label htmlFor="floatingInputMistakes0_1000">
             Mistake from 0 to 1000
           </label>
         </div>
 
-        <div className="col-lg col-6 form-floating m-2">
+        <form
+          className="col-lg-4 col-6 form-floating m-2 row"
+          onSubmit={handleSubmit(onSubmitSeed)}
+        >
           <input
-            className="form-control"
+            defaultValue={seed}
+            className="form-control col-lg "
             id="floatingInputSeed"
             type="number"
-            {...register("seed", { min: 1, max: 99 })}
+            {...register("seed", { min: 0, max: 99 })}
           />
           <label htmlFor="floatingInputSeed">Seed for random</label>
-        </div>
-
-        <button
-          className="col-lg-1 col-6 btn btn-outline-success m-2"
-          type="submit"
-        >
-          Random
-        </button>
-      </form>
+          <button
+            className="col-lg col-6 btn btn-outline-success m-2"
+            type="submit"
+          >
+            Random
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
