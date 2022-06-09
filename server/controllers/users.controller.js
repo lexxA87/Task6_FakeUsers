@@ -1,10 +1,11 @@
 const { faker } = require("@faker-js/faker");
 
 function createRandomUser(num) {
+  faker.setLocale("ge");
   return {
     num: num,
     userId: faker.database.mongodbObjectId(),
-    username: faker.name.findName(),
+    userName: faker.name.findName(),
     phoneNumber: faker.phone.phoneNumber(),
     address: {
       city: faker.address.cityName(),
