@@ -1,10 +1,11 @@
 import React from "react";
 
 function User(props) {
-  const { num, userId, userName, phoneNumber, address } = props.user;
+  const { userId, userName, phoneNumber, address } = props.user;
+  const { num } = props;
   return (
     <tr>
-      <th scope="row">{num}</th>
+      <th scope="row">{num + 1}</th>
       <td>{userId}</td>
       <td>{userName}</td>
       <td>

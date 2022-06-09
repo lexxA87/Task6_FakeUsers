@@ -1,9 +1,11 @@
 const { faker } = require("@faker-js/faker");
 
-function createRandomUser(num) {
-  faker.setLocale("ge");
+function createRandomUser(page, num) {
+  // faker.setLocale("ge");
+  const numUser = parseInt(page + num);
+  faker.seed(numUser);
   return {
-    num: num,
+    numUser: numUser,
     userId: faker.database.mongodbObjectId(),
     userName: faker.name.findName(),
     phoneNumber: faker.phone.phoneNumber(),
@@ -15,11 +17,19 @@ function createRandomUser(num) {
 }
 
 const getUsers = (req, res, next) => {
+  const { page } = req.query;
   try {
     let users = [];
-    for (let i = 0; i < 10; i++) {
-      users.push(createRandomUser(i + 1));
+    if (page == 1) {
+      for (let i = 0; i < 20; i++) {
+        users.push(createRandomUser(page, i));
+      }
+    } else {
+      for (let i = 0; i < 10; i++) {
+        users.push(createRandomUser(page, i));
+      }
     }
+
     return res.status(200).json(users);
   } catch (error) {
     console.log(error);
