@@ -3,6 +3,10 @@ import axios from "axios";
 
 import User from "./User";
 
+const client = axios.create({
+  baseURL: "http://localhost:5000/api/users",
+});
+
 function TableUsers(props) {
   const { selectedCountry, rangeMistake, seed } = props;
   const [users, setUsers] = useState([]);
@@ -10,12 +14,14 @@ function TableUsers(props) {
   const [fetching, setFetching] = useState(false);
   const [feed, setFeed] = useState(20);
 
+  console.log(rangeMistake);
+
   useEffect(() => {
     console.log("useEffect scroll");
     if (fetching) {
-      axios
+      client
         .get(
-          `http://localhost:5000/api/users?page=${currentPage}&lang=${selectedCountry}&seed=${seed}&feed=${feed}`
+          `?page=${currentPage}&lang=${selectedCountry}&seed=${seed}&feed=${feed}`
         )
         .then((res) => {
           setUsers([...users, ...res.data]);
@@ -31,8 +37,8 @@ function TableUsers(props) {
   useEffect(() => {
     console.log("useEffect start");
 
-    axios
-      .get(`http://localhost:5000/api/users?feed=20`)
+    client
+      .get(`?feed=20`)
       .then((res) => {
         setUsers(res.data);
         setCurrentPage(2);
@@ -44,10 +50,8 @@ function TableUsers(props) {
   useEffect(() => {
     console.log("useEffect Select country");
 
-    axios
-      .get(
-        `http://localhost:5000/api/users?feed=20&lang=${selectedCountry}&seed=${seed}`
-      )
+    client
+      .get(`?feed=20&lang=${selectedCountry}&seed=${seed}`)
       .then((res) => {
         setUsers(res.data);
         setCurrentPage(2);
