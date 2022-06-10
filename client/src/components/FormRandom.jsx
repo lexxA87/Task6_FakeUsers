@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
-function FormRandom() {
-  const [selectedCountry, setSelectedCountry] = useState(1);
+function FormRandom(props) {
+  const { selectedCountry, setSelectedCountry } = props;
   const [rangeMistake, setRangeMistake] = useState(0);
   const [seed, setSeed] = useState(0);
   const { register, handleSubmit } = useForm();
@@ -17,9 +17,9 @@ function FormRandom() {
             value={selectedCountry}
             onChange={(e) => setSelectedCountry(e.target.value)}
           >
-            <option value={1}>The United States</option>
-            <option value={2}>Russia</option>
-            <option value={3}>Georgia</option>
+            <option value="en_US">The United States</option>
+            <option value="ru">Russia</option>
+            <option value="ge">Georgia</option>
           </select>
         </div>
 

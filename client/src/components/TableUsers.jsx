@@ -3,7 +3,8 @@ import axios from "axios";
 
 import User from "./User";
 
-function TableUsers() {
+function TableUsers(props) {
+  const { selectedCountry } = props;
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [fetching, setFetching] = useState(true);
@@ -12,7 +13,9 @@ function TableUsers() {
     console.log("useEffect");
     if (fetching) {
       axios
-        .get(`http://localhost:5000/api/users?page=${currentPage}`)
+        .get(
+          `http://localhost:5000/api/users?page=${currentPage}&lang=${selectedCountry}`
+        )
         .then((res) => {
           setUsers([...users, ...res.data]);
           setCurrentPage((prevState) => prevState + 1);
@@ -20,7 +23,20 @@ function TableUsers() {
         .catch((error) => console.log(error))
         .finally(() => setFetching(false));
     }
-  }, [currentPage, fetching, users]);
+  }, [currentPage, fetching, users, selectedCountry]);
+
+  useEffect(() => {
+    console.log("useEffect Select country");
+
+    axios
+      .get(`http://localhost:5000/api/users?page=1&lang=${selectedCountry}`)
+      .then((res) => {
+        setUsers(res.data);
+        setCurrentPage(1);
+      })
+      .catch((error) => console.log(error))
+      .finally(() => setFetching(false));
+  }, [selectedCountry]);
 
   useEffect(() => {
     document.addEventListener("scroll", scrollFunc);
