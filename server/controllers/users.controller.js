@@ -1,18 +1,14 @@
 const { faker } = require("@faker-js/faker");
 const anbani = require("anbani");
 
-function createRandomUser(page, num, lang = "en_US") {
+function createRandomUser(page = "1", num, lang = "en_US", seed = "0") {
   faker.setLocale(lang);
-  const numUser = parseInt(page + num);
+  const numUser = parseInt(page + seed + num);
   faker.seed(numUser);
   return {
     numUser: numUser,
     userId: faker.database.mongodbObjectId(),
-    userName:
-      lang == "ge"
-        ? // ? anbani.core.interpret(faker.name.findName(), "mkhedruli")
-          anbani.lorem.names(1)
-        : faker.name.findName(),
+    userName: lang == "ge" ? anbani.lorem.names(1) : faker.name.findName(),
     phoneNumber: faker.phone.phoneNumber(),
     address: {
       city: faker.address.cityName(),
@@ -22,18 +18,12 @@ function createRandomUser(page, num, lang = "en_US") {
 }
 
 const getUsers = (req, res, next) => {
-  const { page } = req.query;
-  const { lang } = req.query;
+  const { page, lang, seed, feed } = req.query;
   try {
     let users = [];
-    if (page == 1) {
-      for (let i = 0; i < 20; i++) {
-        users.push(createRandomUser(page, i, lang));
-      }
-    } else {
-      for (let i = 0; i < 10; i++) {
-        users.push(createRandomUser(page, i, lang));
-      }
+
+    for (let i = 0; i < feed; i++) {
+      users.push(createRandomUser(page, i, lang, seed));
     }
 
     return res.status(200).json(users);

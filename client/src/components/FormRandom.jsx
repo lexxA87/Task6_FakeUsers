@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 
 function FormRandom(props) {
-  const { selectedCountry, setSelectedCountry } = props;
-  const [rangeMistake, setRangeMistake] = useState(0);
-  const [seed, setSeed] = useState(0);
+  const {
+    selectedCountry,
+    setSelectedCountry,
+    rangeMistake,
+    setRangeMistake,
+    seed,
+    setSeed,
+  } = props;
   const { register, handleSubmit } = useForm();
   const onSubmitSeed = (data) => (data.seed ? setSeed(data.seed) : setSeed(0));
 
@@ -61,7 +66,7 @@ function FormRandom(props) {
             className="form-control col-lg "
             id="floatingInputSeed"
             type="number"
-            {...register("seed", { min: 0, max: 99 })}
+            {...register("seed")}
           />
           <label htmlFor="floatingInputSeed">Seed for random</label>
           <button

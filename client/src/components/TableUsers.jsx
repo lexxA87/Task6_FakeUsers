@@ -4,39 +4,57 @@ import axios from "axios";
 import User from "./User";
 
 function TableUsers(props) {
-  const { selectedCountry } = props;
+  const { selectedCountry, rangeMistake, seed } = props;
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [fetching, setFetching] = useState(true);
+  const [fetching, setFetching] = useState(false);
+  const [feed, setFeed] = useState(20);
 
   useEffect(() => {
-    console.log("useEffect");
+    console.log("useEffect scroll");
     if (fetching) {
       axios
         .get(
-          `http://localhost:5000/api/users?page=${currentPage}&lang=${selectedCountry}`
+          `http://localhost:5000/api/users?page=${currentPage}&lang=${selectedCountry}&seed=${seed}&feed=${feed}`
         )
         .then((res) => {
           setUsers([...users, ...res.data]);
           setCurrentPage((prevState) => prevState + 1);
         })
         .catch((error) => console.log(error))
-        .finally(() => setFetching(false));
+        .finally(() => {
+          setFetching(false);
+        });
     }
-  }, [currentPage, fetching, users, selectedCountry]);
+  }, [currentPage, fetching, users, selectedCountry, seed, feed]);
+
+  useEffect(() => {
+    console.log("useEffect start");
+
+    axios
+      .get(`http://localhost:5000/api/users?feed=20`)
+      .then((res) => {
+        setUsers(res.data);
+        setCurrentPage(2);
+      })
+      .catch((error) => console.log(error))
+      .finally(() => setFeed(10));
+  }, []);
 
   useEffect(() => {
     console.log("useEffect Select country");
 
     axios
-      .get(`http://localhost:5000/api/users?page=1&lang=${selectedCountry}`)
+      .get(
+        `http://localhost:5000/api/users?feed=20&lang=${selectedCountry}&seed=${seed}`
+      )
       .then((res) => {
         setUsers(res.data);
-        setCurrentPage(1);
+        setCurrentPage(2);
       })
       .catch((error) => console.log(error))
-      .finally(() => setFetching(false));
-  }, [selectedCountry]);
+      .finally(() => setFeed(10));
+  }, [selectedCountry, seed]);
 
   useEffect(() => {
     document.addEventListener("scroll", scrollFunc);
