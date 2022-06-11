@@ -8,9 +8,7 @@ function User(props) {
       <th scope="row">{num + 1}</th>
       <td>{userId}</td>
       <td>{userName}</td>
-      <td>
-        {address.city}, {address.street}
-      </td>
+      <td>{address}</td>
       <td>{phoneNumber}</td>
     </tr>
   );

@@ -10,10 +10,8 @@ function createRandomUser(page = "1", num, lang = "en_US", seed = "0") {
     userId: faker.database.mongodbObjectId(),
     userName: lang == "ge" ? anbani.lorem.names(1) : faker.name.findName(),
     phoneNumber: faker.phone.phoneNumber(),
-    address: {
-      city: faker.address.cityName(),
-      street: faker.address.streetAddress(true),
-    },
+    address:
+      faker.address.cityName() + ", " + faker.address.streetAddress(true),
   };
 }
 

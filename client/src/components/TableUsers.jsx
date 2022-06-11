@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import User from "./User";
+import { mistake } from "../utilities/mistakes";
 
 const client = axios.create({
   baseURL: "http://localhost:5000/api/users",
@@ -13,11 +14,9 @@ function TableUsers(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [fetching, setFetching] = useState(false);
   const [feed, setFeed] = useState(20);
-
-  console.log(rangeMistake);
+  const [mistakes, setMistakes] = useState(0);
 
   useEffect(() => {
-    console.log("useEffect scroll");
     if (fetching) {
       client
         .get(
@@ -35,8 +34,6 @@ function TableUsers(props) {
   }, [currentPage, fetching, users, selectedCountry, seed, feed]);
 
   useEffect(() => {
-    console.log("useEffect start");
-
     client
       .get(`?feed=20`)
       .then((res) => {
@@ -48,8 +45,6 @@ function TableUsers(props) {
   }, []);
 
   useEffect(() => {
-    console.log("useEffect Select country");
-
     client
       .get(`?feed=20&lang=${selectedCountry}&seed=${seed}`)
       .then((res) => {
@@ -67,6 +62,10 @@ function TableUsers(props) {
       document.removeEventListener("scroll", scrollFunc);
     };
   }, []);
+
+  useEffect(() => {
+    setMistakes(rangeMistake);
+  }, [rangeMistake]);
 
   const scrollFunc = (e) => {
     const n =
@@ -93,9 +92,14 @@ function TableUsers(props) {
           </tr>
         </thead>
         <tbody>
-          {users.map((user, i) => {
-            return <User user={user} key={i} num={i} />;
-          })}
+          {mistakes === 0
+            ? users.map((user, i) => {
+                return <User user={user} key={i} num={i} />;
+              })
+            : users.map((user, i) => {
+                const userWithMistakes = mistake(mistakes, user);
+                return <User user={userWithMistakes} key={i} num={i} />;
+              })}
         </tbody>
       </table>
     </div>
